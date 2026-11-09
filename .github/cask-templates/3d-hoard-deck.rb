@@ -20,10 +20,9 @@ cask "3d-hoard-deck" do
     strategy :github_latest
   end
 
-  # Add `auto_updates true` here with the first release whose build can update itself in-app
-  # (updater "pubkey" set in tauri.conf.json and TAURI_SIGNING_PRIVATE_KEY set in the release workflow),
-  # so `brew upgrade` and the app do not both update it. 1.1.0 has the update check but no key yet:
-  # it only opens the release page, so brew must keep upgrading it.
+  # Since 1.1.0 the app updates itself (Tauri updater, signed latest.json on the GitHub release),
+  # so `brew upgrade` leaves it alone unless run with --greedy.
+  auto_updates true
 
   app "3D Hoard Deck.app"
 
