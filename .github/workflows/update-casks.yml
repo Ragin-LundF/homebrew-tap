@@ -1,0 +1,48 @@
+# Keeps the casks of 3D Hoard Deck, Ragin DMS and Rule Engine UI on the latest published release.
+# Runs every hour and can be started by hand (Actions › Update casks › Run workflow) right after publishing.
+# ssh-connect is not handled here: GoReleaser writes Casks/ssh-connect.rb on each ssh-connect release.
+name: Update casks
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      cask:
+        description: "Only this cask (empty = all)"
+        required: false
+        default: ""
+      force:
+        description: "Rewrite even if the version did not change"
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: update-casks
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Write casks for new releases
+        id: update
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          FORCE: ${{ inputs.force && '1' || '' }}
+        run: python3 .github/scripts/update_casks.py ${{ inputs.cask }}
+
+      - name: Commit and push
+        if: steps.update.outputs.changed != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks
+          git commit -m "Update casks: ${{ steps.update.outputs.changed }}"
+          git push
