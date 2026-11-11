@@ -23,7 +23,7 @@ APPS = {
     },
     "ragin-dms": {
         "repo": "Ragin-LundF/ragin-dms",
-        "assets": {"ARM": r"\.dmg$"},
+        "assets": {"ARM": r"_aarch64\.dmg$", "INTEL": r"_x64\.dmg$"},
     },
     "ruleengine-ui": {
         "repo": "Ragin-LundF/rule-engine",
