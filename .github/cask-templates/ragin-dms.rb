@@ -2,14 +2,9 @@
 cask "ragin-dms" do
   version "@@VERSION@@"
 
-  on_arm do
-    sha256 "@@SHA256_ARM@@"
-    url "@@URL_ARM@@"
-  end
-  on_intel do
-    sha256 "@@SHA256_INTEL@@"
-    url "@@URL_INTEL@@"
-  end
+  sha256 "@@SHA256_ARM@@"
+
+  url "@@URL_ARM@@"
 
   name "Ragin DMS"
   desc "Desktop document management that works on your existing folders"
@@ -19,6 +14,9 @@ cask "ragin-dms" do
     url :url
     strategy :github_latest
   end
+
+  # The release builds the DMG for Apple Silicon only.
+  depends_on arch: :arm64
 
   app "Ragin-DMS.app"
 
